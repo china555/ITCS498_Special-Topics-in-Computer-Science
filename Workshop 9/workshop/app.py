@@ -17,18 +17,20 @@ def predict():
     data = json.loads(data)
 
     # [#2] YOUR CODE HERE - Preprocess
-    # value = ...
+    value = D.preprocess(data)
 
     # [#3] YOUR CODE HERE - Predictions
-    # output = ...
+    output = M.predict(value)
 
-    data['Survived'] = output
+    data['Survived'] = int(output)
     return json.dumps(data)
+
 
 @app.route('/')
 def index():
     '''Start page for testing.'''
     return 'Welcome to ITCS498 @ MUICT'
+
 
 @app.route('/sample', methods=['GET'])
 def sample():
@@ -37,15 +39,27 @@ def sample():
     package such sample in a JSON file, and send a HTTP POST to the prediction API.
     '''
     # [#1] YOUR CODE HERE - Sample data
-    # payload = ...
+    payload = {
+        'Age': 22.0,
+        'Cabin': 'UNK',
+        'Embarked': 'S',
+        'Fare': 7.25,
+        'Name': 'Braund, Mr. Owen Harris',
+        'Parch': 0,
+        'PassengerId': 1,
+        'Pclass': 3,
+        'Sex': 'male',
+        'SibSp': 1,
+        # 'Survived': 0,
+        'Ticket': 'A/5 21171'}
 
     # Send a HTTP POST to the prediction API
     r = requests.post(
-        'http://localhost:5000/predict', 
+        'http://localhost:5000/predict',
         data=json.dumps(payload))
 
     return r.json()
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)
-
